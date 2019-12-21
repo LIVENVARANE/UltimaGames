@@ -1,0 +1,129 @@
+Games:
+  Totem:
+    mapName: totem
+    waitSpawnLoc: 0.500,256,0.500
+    redSpawnLoc: 2.500,248,4.500
+    blueSpawnLoc: 6.500,248,7.500
+    redObsiLoc: 0,2   #<X>,<Y>
+    blueObsiLoc: 8,9
+    totemHeight: 4 #In blocks
+    isGameStarting: 0 #Dont touch
+    redTotemBlocksBroken: 0 #Dont touch
+    blueTotemBlocksBroken: 0 #Dont touch
+    Teams:
+      Red:
+        a:
+          obsidian: 0
+          kills: 0
+          deaths: 0
+          killstreak: 0
+      Blue:
+        a:
+          obsidian: 0
+          kills: 0
+          deaths: 0
+          killstreak: 0
+  RushFFA:
+    Original:
+      mapName: rushffaOriginal
+      joke1: tU fUlL KB :(
+      joke2: wEsH T f0rt
+      joke3: Vas-y mon poulain!
+      joke4: tU tr1cHes
+      joke5: Original AKA On change pas une �quipe qui gagne
+      joke6: AreT de foCus
+      joke7: Minecraft c'est ma vie, Einstein 1932
+      joke8: W-Tap gangsta
+      joke9: Les vrais sautent en fight
+      joke10: J'ai pas de blague pour cette fois dsl
+      specLoc: 0.500,90,-0.500
+      spawnLoc1: 0.500,75,27.500
+      spawnLoc2: 0.500,50,27.500
+      spawnLoc3: 0.500,25,27.500
+      spawnLoc4: -26.500,75,0.500
+      spawnLoc5: -26.500,50,0.500
+      spawnLoc6: -26.500,25,0.500
+      spawnLoc7: 0.500,75,-26.500
+      spawnLoc8: 0.500,50,-26.500
+      spawnLoc9: 0.500,25,-26.500
+      spawnLoc10: 27.500,75,0.500
+      spawnLoc11: 27.500,50,0.500
+      spawnLoc12: 27.500,25,0.500
+      spawnLoc13: 0.500,75,32.500
+      spawnLoc14: 0.500,50,32.500
+      spawnLoc15: 0.500,25,32.500
+      spawnLoc16: -31.500,75,0.500
+      spawnLoc17: -31.500,50,0.500
+      spawnLoc18: -31.500,25,0.500
+      spawnLoc19: 0.500,75,-31.500
+      spawnLoc20: 0.500,50,-31.500
+      spawnLoc21: 0.500,25,-31.500
+      spawnLoc22: 32.500,75,0.500
+      spawnLoc23: 32.500,50,0.500
+      spawnLoc24: 32.500,25,0.500
+      spawnLoc25: 0.500,75,69.500
+      spawnLoc26: 0.500,50,69.500
+      spawnLoc27: 0.500,25,69.500
+      spawnLoc28: -68.500,75,0.500
+      spawnLoc30: -68.500,50,0.500
+      spawnLoc31: -68.500,25,0.500
+      spawnLoc32: 0.500,75,-68.500
+      spawnLoc33: 0.500,50,-68.500
+      spawnLoc34: 0.500,25,-68.500
+      spawnLoc35: 69.500,75,0.500
+      spawnLoc36: 69.500,50,0.500
+      spawnLoc37: 69.500,25,0.500
+    Deluxe:
+      mapName: rushffaDeluxe
+      joke1: tU fUlL KB :(
+      joke2: wEsH T f0rt
+      joke3: Vas-y mon poulain!
+      joke4: tU tr1cHes
+      joke5: Deluxe AKA �dition gosse de riche
+      joke6: AreT de foCus
+      joke7: Ultima c'est ma vie, Einstein 1932
+      joke8: W-Tap gangsta
+      joke9: Les vrais sautent en fight
+      joke10: J'ai pas de blague pour cette fois dsl
+      specLoc: 0.500,90,-0.500
+      elytraLoc1: 0.500,80,0.500
+      elytraLoc2: 0.500,55,0.500
+      elytraLoc3: 0.500,30,0.500
+      elytraSpawnDelay: 120
+      elytraSpawn: 0
+      spawnLoc1: 0.500,75,27.500
+      spawnLoc2: 0.500,50,27.500
+      spawnLoc3: 0.500,25,27.500
+      spawnLoc4: -26.500,75,0.500
+      spawnLoc5: -26.500,50,0.500
+      spawnLoc6: -26.500,25,0.500
+      spawnLoc7: 0.500,75,-26.500
+      spawnLoc8: 0.500,50,-26.500
+      spawnLoc9: 0.500,25,-26.500
+      spawnLoc10: 27.500,75,0.500
+      spawnLoc11: 27.500,50,0.500
+      spawnLoc12: 27.500,25,0.500
+      spawnLoc13: 0.500,75,32.500
+      spawnLoc14: 0.500,50,32.500
+      spawnLoc15: 0.500,25,32.500
+      spawnLoc16: -31.500,75,0.500
+      spawnLoc17: -31.500,50,0.500
+      spawnLoc18: -31.500,25,0.500
+      spawnLoc19: 0.500,75,-31.500
+      spawnLoc20: 0.500,50,-31.500
+      spawnLoc21: 0.500,25,-31.500
+      spawnLoc22: 32.500,75,0.500
+      spawnLoc23: 32.500,50,0.500
+      spawnLoc24: 32.500,25,0.500
+      spawnLoc25: 0.500,75,69.500
+      spawnLoc26: 0.500,50,69.500
+      spawnLoc27: 0.500,25,69.500
+      spawnLoc28: -68.500,75,0.500
+      spawnLoc30: -68.500,50,0.500
+      spawnLoc31: -68.500,25,0.500
+      spawnLoc32: 0.500,75,-68.500
+      spawnLoc33: 0.500,50,-68.500
+      spawnLoc34: 0.500,25,-68.500
+      spawnLoc35: 69.500,75,0.500
+      spawnLoc36: 69.500,50,0.500
+      spawnLoc37: 69.500,25,0.500
