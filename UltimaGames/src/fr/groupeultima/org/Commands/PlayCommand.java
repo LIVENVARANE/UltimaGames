@@ -79,10 +79,14 @@ public class PlayCommand implements CommandExecutor {
 		spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
 		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
 		p.teleport(spawnLoc);
-		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.YELLOW + "En attente de joueurs...");
 		int waitingPlayers = Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size();
 		if(waitingPlayers >= UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart")) {
 			UltimaGames.getConfig().set("Games.Totem.isGameStarting", 1); //tell to players game is starting
+			Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie!"));
+			p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.GREEN + "Lancement en cours");
+		}
+		else {
+			p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.YELLOW + "En attente de joueurs...");
 		}
 	}
 	

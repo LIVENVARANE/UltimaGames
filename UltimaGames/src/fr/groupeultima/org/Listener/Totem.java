@@ -83,8 +83,12 @@ public class Totem implements Listener {
 			UltimaGames.saveConfig();
 			UltimaGames.reloadConfig();
 		}
-		else {
-			return;
+		else { //player was waiting
+			int waitingPlayers = Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size();
+			if(waitingPlayers < UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart")) {
+				UltimaGames.getConfig().set("Games.Totem.isGameStarting", 0);
+				Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Lancement de la partie annulé car il n'y a plus assez de joueurs."));
+			}
 		}
 	}
 	
