@@ -91,31 +91,49 @@ public class PlayCommand implements CommandExecutor {
 				public void run() {
 					if(i == 1) {
 						i++;
+						if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+							return;
+						}
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 5 secondes.."));
 						return;
 					}
 					if(i == 2) {
 						i++;
+						if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+							return;
+						}
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 4 secondes.."));
 						return;
 					}
 					if(i == 3) {
 						i++;
+						if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+							return;
+						}
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 3 secondes.."));
 						return;
 					}
 					if(i == 4) {
 						i++;
+						if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+							return;
+						}
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 2 secondes.."));
 						return;
 					}
 					if(i == 5) {
 						i++;
+						if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+							return;
+						}
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 1 seconde.."));
 						return;
 					}
 					if(i == 6) {
 						i++;
+						if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+							return;
+						}
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie!"));
 						
 						//equally dispatch players in each teams
