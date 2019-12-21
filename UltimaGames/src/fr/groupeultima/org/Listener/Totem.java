@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,6 +37,9 @@ public class Totem implements Listener {
 					p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Vos r�compenses pour avoir cass� des blocks du totem ennemi n'ont pas �t� ajout�es � votre compte car vous avez quitt� la partie.");
 				}
 				UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName(), null);
+				int pre_redPlayers = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
+				int redPlayers = pre_redPlayers - 1;
+				UltimaGames.getConfig().set("Games.Totem.redPlayers", redPlayers);
 				UltimaGames.saveConfig();
 				UltimaGames.reloadConfig();
 			}
@@ -44,11 +48,18 @@ public class Totem implements Listener {
 					p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Vos r�compenses pour avoir cass� des blocks du totem ennemi n'ont pas �t� ajout�es � votre compte car vous avez quitt� la partie.");
 				}
 				UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName(), null);
+				int pre_bluePlayers = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
+				int bluePlayers = pre_bluePlayers - 1;
+				UltimaGames.getConfig().set("Games.Totem.bluePlayers", bluePlayers);
 				UltimaGames.saveConfig();
 				UltimaGames.reloadConfig();
 			}
-			else {
-				return;
+			else { //player was waiting
+				int waitingPlayers = Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size();
+				if(waitingPlayers < UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart")) {
+					UltimaGames.getConfig().set("Games.Totem.isGameStarting", 0);
+					Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Lancement de la partie annulé car il n'y a plus assez de joueurs."));
+				}
 			}
 		}
 	}
@@ -58,11 +69,17 @@ public class Totem implements Listener {
 		Player p = e.getPlayer();
 		if(UltimaGames.getConfig().contains("Games.Totem.Teams.Red." + p.getName())) {
 			UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName(), null);
+			int pre_redPlayers = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
+			int redPlayers = pre_redPlayers - 1;
+			UltimaGames.getConfig().set("Games.Totem.redPlayers", redPlayers);
 			UltimaGames.saveConfig();
 			UltimaGames.reloadConfig();
 		}
 		else if(UltimaGames.getConfig().contains("Games.Totem.Teams.Blue." + p.getName())) {
 			UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName(), null);
+			int pre_bluePlayers = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
+			int bluePlayers = pre_bluePlayers - 1;
+			UltimaGames.getConfig().set("Games.Totem.bluePlayers", bluePlayers);
 			UltimaGames.saveConfig();
 			UltimaGames.reloadConfig();
 		}
@@ -75,7 +92,7 @@ public class Totem implements Listener {
 	
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
-		if(e.getBlock().getWorld().toString() == UltimaGames.totemMap) {
+		if(e.getBlock().getWorld() == Bukkit.getServer().getWorld(UltimaGames.totemMap)) {
 			TotemBlocks.add(e.getBlock());
 		}
 	}
@@ -110,10 +127,31 @@ public class Totem implements Listener {
 						UltimaGames.reloadConfig();
 						
 						//check if blocks_broken == totem_blocks_number (is game ended?)
-						if(UltimaGames.getConfig().getInt("Games.Totem.totemHeight") == UltimaGames.getConfig().getInt("Games.Totem.redTotemBlocksBroken")) {
+						if(UltimaGames.getConfig().getInt("Games.Totem.totemHeight") == blocks_broken) {
 							//blue won
 							
 							TotemBlocks.forEach(blocks -> blocks.setType(Material.AIR));
+							
+							p.sendMessage("you won");
+							
+							UltimaGames.getConfig().set("Games.Totem.Teams", null);
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem"), "Teams");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams"), "Red");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams"), "Blue");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams.Red"), "a");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams.Blue"), "a");
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.obsidian", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.obsidian", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.kills", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.kills", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.deaths", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.deaths", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.killstreak", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.killstreak", 0);
+							UltimaGames.getConfig().set("Games.Totem.redTotemBlocksBroken", 0);
+							UltimaGames.getConfig().set("Games.Totem.blueTotemBlocksBroken", 0);
+							UltimaGames.saveConfig();
+							UltimaGames.reloadConfig();
 							
 						}
 					}
@@ -140,10 +178,33 @@ public class Totem implements Listener {
 						UltimaGames.reloadConfig();
 						
 						//check if blocks_broken == totem_blocks_number (is game ended?)
-						if(UltimaGames.getConfig().getInt("Games.Totem.totemHeight") == UltimaGames.getConfig().getInt("Games.Totem.blueTotemBlocksBroken")) {
+						if(UltimaGames.getConfig().getInt("Games.Totem.totemHeight") == blocks_broken) {
 							//red won
 							
 							TotemBlocks.forEach(blocks -> blocks.setType(Material.AIR));
+							
+							p.sendMessage("you won");
+							
+							UltimaGames.getConfig().set("Games.Totem.Teams", null);
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem"), "Teams");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams"), "Red");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams"), "Blue");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams.Red"), "a");
+							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams.Blue"), "a");
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.obsidian", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.obsidian", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.kills", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.kills", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.deaths", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.deaths", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Red.a.killstreak", 0);
+							UltimaGames.getConfig().set("Games.Totem.Teams.Blue.a.killstreak", 0);
+							UltimaGames.getConfig().set("Games.Totem.redTotemBlocksBroken", 0);
+							UltimaGames.getConfig().set("Games.Totem.blueTotemBlocksBroken", 0);
+							UltimaGames.getConfig().set("Games.Totem.redPlayers", 0);
+							UltimaGames.getConfig().set("Games.Totem.bluePlayers", 0);
+							UltimaGames.saveConfig();
+							UltimaGames.reloadConfig();
 							
 						}
 					}

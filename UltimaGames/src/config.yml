@@ -7,9 +7,12 @@ Games:
     redObsiLoc: 0,2   #<X>,<Y>
     blueObsiLoc: 8,9
     totemHeight: 4 #In blocks
+    minimumPlayersToStart: 2
     isGameStarting: 0 #Dont touch
     redTotemBlocksBroken: 0 #Dont touch
     blueTotemBlocksBroken: 0 #Dont touch
+    redPlayers: 0 #Dont touch
+    bluePlayers: 0 #Dont touch
     Teams:
       Red:
         a:

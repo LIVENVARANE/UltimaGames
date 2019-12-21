@@ -35,6 +35,9 @@ public class PlayCommand implements CommandExecutor {
 		UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName() + ".kills", 0);
 		UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName() + ".deaths", 0);
 		UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName() + ".killstreak", 0);
+		int redPlayers = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
+		redPlayers++;
+		UltimaGames.getConfig().set("Games.Totem.redPlayers", redPlayers);
 		UltimaGames.saveConfig();
 		UltimaGames.reloadConfig();
 		Location spawnLoc =  new Location(Bukkit.getServer().getWorld(UltimaGames.totemMap),0,0,0);
@@ -43,7 +46,7 @@ public class PlayCommand implements CommandExecutor {
 		spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
 		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
 		p.teleport(spawnLoc);
-		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.RED + "Vous �tes rouge!");
+		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.RED + "Vous êtes rouge!");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -53,6 +56,9 @@ public class PlayCommand implements CommandExecutor {
 		UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName() + ".kills", 0);
 		UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName() + ".deaths", 0);
 		UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName() + ".killstreak", 0);
+		int bluePlayers = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
+		bluePlayers++;
+		UltimaGames.getConfig().set("Games.Totem.bluePlayers", bluePlayers);
 		UltimaGames.saveConfig();
 		UltimaGames.reloadConfig();
 		Location spawnLoc =  new Location(Bukkit.getServer().getWorld(UltimaGames.totemMap),0,0,0);
@@ -61,8 +67,23 @@ public class PlayCommand implements CommandExecutor {
 		spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
 		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
 		p.teleport(spawnLoc);
-		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.BLUE + "Vous �tes bleu!");
+		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.BLUE + "Vous êtes bleu!");
 
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void joinAsWaiting(Player p) {
+		Location spawnLoc =  new Location(Bukkit.getServer().getWorld(UltimaGames.totemMap),0,0,0);
+		String preSpawnLoc[] = UltimaGames.getConfig().getString("Games.Totem.waitSpawnLoc").split(",");
+		spawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
+		spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
+		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
+		p.teleport(spawnLoc);
+		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.YELLOW + "En attente de joueurs...");
+		int waitingPlayers = Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size();
+		if(waitingPlayers >= UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart")) {
+			UltimaGames.getConfig().set("Games.Totem.isGameStarting", 1); //tell to players game is starting
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -71,39 +92,48 @@ public class PlayCommand implements CommandExecutor {
 			Player p = ((Player) sender).getPlayer();
 			if(((Player) sender).getPlayer().getWorld() == Bukkit.getServer().getWorld("hub")) {
 				if(args.length == 0) {
-					sender.sendMessage(ChatColor.YELLOW + "Veuillez sp�cifier quel � quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo/totem]");
+					sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo/totem]");
 				}
 				else {
 					if(args.length == 1) {
 						if(args[0].equalsIgnoreCase("rushffa")) {
-							sender.sendMessage(ChatColor.YELLOW + "Veuillez sp�cifier quel � quel mode de RushFFA vous voulez jouer: /play rushffa [original/deluxe]");
+							sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de RushFFA vous voulez jouer: /play rushffa [original/deluxe]");
 						}
 						else if(args[0].equalsIgnoreCase("totem")) {
-							int red_players = UltimaGames.getConfig().getStringList("Games.Totem.Teams.Red").size();
-							int blue_players = UltimaGames.getConfig().getStringList("Games.Totem.Teams.Blue").size();
+							int blue_players = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
+							int red_players = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
 							
-							if(red_players > blue_players) {
-								joinAsBlue(p);
+							if(red_players == 0 && blue_players == 0) {
+								//waiting time
+								joinAsWaiting(p);
 							}
-							else if(red_players < blue_players) {
-								joinAsRed(p);
-							}
-							else if(red_players == blue_players) {
-								int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
-								if(redorblue == 0) {
-									joinAsRed(p);
-								}
-								else {
+							else { //game is started
+							
+								if(red_players > blue_players) {
 									joinAsBlue(p);
 								}
-							}
-							else {
-								p.sendMessage(ChatColor.RED + "Une erreur est survenue, veuillez r�-essayer.");
+								else if(red_players < blue_players) {
+									joinAsRed(p);
+								}
+								else if(red_players == blue_players) {
+									int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
+									if(redorblue == 0) {
+										joinAsRed(p);
+										//(test)
+										//p.sendMessage("blue team: " + blue_players + ", red team: " + red_players);
+									}
+									else {
+										joinAsBlue(p);
+									}
+								}
+								else {
+									p.sendMessage(ChatColor.RED + "Une erreur est survenue, veuillez ré-essayer.");
+								}
 							}
 							
 						}
 						else {
-							sender.sendMessage(ChatColor.YELLOW + "Veuillez sp�cifier quel � quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo/totem]");
+							sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo/totem]");
 						}
 					}
 					else if(args.length == 2) {
@@ -208,11 +238,11 @@ public class PlayCommand implements CommandExecutor {
 								((Player) sender).getPlayer().sendTitle(ChatColor.AQUA + "RushFFA" + ChatColor.GOLD + "" + ChatColor.ITALIC + " Deluxe", ChatColor.DARK_AQUA + selectedJoke);
 							}
 							else {
-								sender.sendMessage(ChatColor.YELLOW + "Veuillez sp�cifier quel � quel mode de RushFFA vous voulez jouer: /play rushffa [original/deluxe]");
+								sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de RushFFA vous voulez jouer: /play rushffa [original/deluxe]");
 							}
 						}
 						else {
-							sender.sendMessage(ChatColor.YELLOW + "Veuillez sp�cifier quel � quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo]");
+							sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo]");
 						}
 					}
 				}

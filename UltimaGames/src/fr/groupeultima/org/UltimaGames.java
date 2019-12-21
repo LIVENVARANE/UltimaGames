@@ -80,11 +80,16 @@ public class UltimaGames extends JavaPlugin {
 		FileConfiguration.createPath(getConfig().getConfigurationSection("Games.Totem.Teams.Blue"), "a");
 		getConfig().set("Games.Totem.Teams.Red.a.obsidian", 0);
 		getConfig().set("Games.Totem.Teams.Blue.a.obsidian", 0);
+		getConfig().set("Games.Totem.Teams.Red.a.kills", 0);
 		getConfig().set("Games.Totem.Teams.Blue.a.kills", 0);
 		getConfig().set("Games.Totem.Teams.Red.a.deaths", 0);
 		getConfig().set("Games.Totem.Teams.Blue.a.deaths", 0);
 		getConfig().set("Games.Totem.Teams.Red.a.killstreak", 0);
 		getConfig().set("Games.Totem.Teams.Blue.a.killstreak", 0);
+		getConfig().set("Games.Totem.redTotemBlocksBroken", 0);
+		getConfig().set("Games.Totem.blueTotemBlocksBroken", 0);
+		getConfig().set("Games.Totem.redPlayers", 0);
+		getConfig().set("Games.Totem.bluePlayers", 0);
 		saveConfig();
 		reloadConfig();
 	}
