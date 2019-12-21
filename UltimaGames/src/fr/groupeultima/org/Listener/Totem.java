@@ -34,7 +34,7 @@ public class Totem implements Listener {
 		if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.totemMap)) {
 			if(UltimaGames.getConfig().contains("Games.Totem.Teams.Red." + p.getName())) {
 				if(UltimaGames.getConfig().getInt("Games.Totem.Teams.Red." + p.getName() + ".obsidian") > 0) {
-					p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Vos r�compenses pour avoir cass� des blocks du totem ennemi n'ont pas �t� ajout�es � votre compte car vous avez quitt� la partie.");
+					p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Vos récompenses pour avoir cassé des blocks du totem ennemi n'ont pas été ajoutées à votre compte car vous avez quitté la partie.");
 				}
 				UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName(), null);
 				int pre_redPlayers = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
@@ -45,7 +45,7 @@ public class Totem implements Listener {
 			}
 			else if(UltimaGames.getConfig().contains("Games.Totem.Teams.Blue." + p.getName())) {
 				if(UltimaGames.getConfig().getInt("Games.Totem.Teams.Blue." + p.getName() + ".obsidian") > 0) {
-					p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Vos r�compenses pour avoir cass� des blocks du totem ennemi n'ont pas �t� ajout�es � votre compte car vous avez quitt� la partie.");
+					p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.RED + "Vos récompenses pour avoir cassé des blocks du totem ennemi n'ont pas été ajoutées à votre compte car vous avez quitté la partie.");
 				}
 				UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName(), null);
 				int pre_bluePlayers = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
@@ -119,8 +119,8 @@ public class Totem implements Listener {
 				if(e.getBlock().getLocation().getX() == redObsiLoc.getX() && e.getBlock().getLocation().getZ() == redObsiLoc.getZ()) {
 					if(UltimaGames.getConfig().contains("Games.Totem.Teams.Blue." + p.getName())) {
 						e.setDropItems(false);
-						p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "Vous avez cass� un bloc d'obsibienne du totem ennemi, bien jou�!" + ChatColor.GOLD + "\nVous receverez 50 Cr�dits si vous jouez jusqu'� la fin de la partie!");
-						p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("�cVous avez cass� un bloc d'obsidienne �r�c. �4+50 Cr�dits en fin de partie."));
+						p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "Vous avez cassé un bloc d'obsibienne du totem ennemi, bien jou�!" + ChatColor.GOLD + "\nVous receverez 50 Crédits si vous jouez jusqu'à la fin de la partie!");
+						p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cVous avez cassé un bloc d'obsidienne §r§c. §4+50 Crédits en fin de partie."));
 						int player_obsidian = UltimaGames.getConfig().getInt("Games.Totem.Teams.Blue." + p.getName() + ".obsidian");
 						player_obsidian++;
 						UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName() + ".obsidian", player_obsidian);
@@ -170,8 +170,8 @@ public class Totem implements Listener {
 				else if(e.getBlock().getLocation().getX() == blueObsiLoc.getX() && e.getBlock().getLocation().getZ() == blueObsiLoc.getZ()) {
 					if(UltimaGames.getConfig().contains("Games.Totem.Teams.Red." + p.getName())) {
 						e.setDropItems(false);
-						p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "Vous avez cass� un bloc d'obsibienne du totem ennemi, bien jou�!" + ChatColor.GOLD + "\nVous receverez 50 Cr�dits si vous jouez jusqu'� la fin de la partie!");
-						p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("�cVous avez cass� un bloc d'obsidienne �r�c. �4+50 Cr�dits en fin de partie."));
+						p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "Vous avez cassé un bloc d'obsibienne du totem ennemi, bien joué!" + ChatColor.GOLD + "\nVous receverez 50 Crédits si vous jouez jusqu'à la fin de la partie!");
+						p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cVous avez cassé un bloc d'obsidienne §r§c. §4+50 Crédits en fin de partie."));
 						int player_obsidian = UltimaGames.getConfig().getInt("Games.Totem.Teams.Red." + p.getName() + ".obsidian");
 						player_obsidian++;
 						UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName() + ".obsidian", player_obsidian);
