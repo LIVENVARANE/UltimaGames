@@ -114,7 +114,7 @@ public class RushFFA implements Listener {
 		if (p.getWorld() == Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap)) {
 			if (p.getLocation().getY() < 0) {
 				if (p.getGameMode() != GameMode.SPECTATOR) {
-					p.sendMessage("y < 0 original");
+					p.sendMessage("y < 0 original"); // DO SAME THING FOR ORIGINAL
 				}
 			}
 		}

@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.groupeultima.org.UltimaGames;
 import io.netty.util.internal.ThreadLocalRandom;
@@ -80,10 +81,50 @@ public class PlayCommand implements CommandExecutor {
 		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
 		p.teleport(spawnLoc);
 		int waitingPlayers = Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size();
-		if(waitingPlayers >= UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart")) {
+		if(waitingPlayers >= UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart") && UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
 			UltimaGames.getConfig().set("Games.Totem.isGameStarting", 1); //tell to players game is starting
-			Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie!"));
 			p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.GREEN + "Lancement en cours");
+			
+			new BukkitRunnable() {
+				int i = 1;
+				@Override
+				public void run() {
+					if(i == 1) {
+						i++;
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 5 secondes.."));
+						return;
+					}
+					if(i == 2) {
+						i++;
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 4 secondes.."));
+						return;
+					}
+					if(i == 3) {
+						i++;
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 3 secondes.."));
+						return;
+					}
+					if(i == 4) {
+						i++;
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 2 secondes.."));
+						return;
+					}
+					if(i == 5) {
+						i++;
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie dans 1 seconde.."));
+						return;
+					}
+					if(i == 6) {
+						i++;
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie!"));
+						
+						//equally dispatch players in each teams
+						
+						UltimaGames.getConfig().set("Games.Totem.isGameStarting", 0);
+						return;
+					}
+				}
+			}.runTaskTimer(UltimaGames, 0, 20);
 		}
 		else {
 			p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.YELLOW + "En attente de joueurs...");
@@ -123,8 +164,6 @@ public class PlayCommand implements CommandExecutor {
 									int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
 									if(redorblue == 0) {
 										joinAsRed(p);
-										//(test)
-										//p.sendMessage("blue team: " + blue_players + ", red team: " + red_players);
 									}
 									else {
 										joinAsBlue(p);

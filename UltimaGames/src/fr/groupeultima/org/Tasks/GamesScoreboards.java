@@ -191,28 +191,36 @@ public class GamesScoreboards implements Listener {
 				    	        cobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				    	        cobjective.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem");
 				    	        Score cscore = cobjective.getScore(" ");
-				    	        cscore.setScore(7);
+				    	        cscore.setScore(9);
 				    	        if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") == 1) {
 				    	        	Score cscore1 = cobjective.getScore(ChatColor.GREEN + "Démarrage...");
-					    	        cscore1.setScore(6);
+					    	        cscore1.setScore(8);
+					    	        Score cscore2 = cobjective.getScore("  ");
+					    	        cscore2.setScore(7);
+					    	        Score cscore3 = cobjective.getScore(ChatColor.GREEN + "→ Joueurs: " + Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size());
+					    	        cscore3.setScore(6);
 				    	        }
 				    	        else {
 				    	        	Score cscore1 = cobjective.getScore(ChatColor.YELLOW + "En attente de joueurs...");
-					    	        cscore1.setScore(6);
-				    	        }
-				    	        Score cscore2 = cobjective.getScore("  ");
-				    	        cscore2.setScore(5);
-				    	        Score cscore3 = cobjective.getScore(ChatColor.AQUA + "→ Kills totaux: " + player_info.getKill(e.getPlayer().getUniqueId(), Games.Totem));
-				    	        cscore3.setScore(4);
-				    	        Score cscore4 = cobjective.getScore(ChatColor.AQUA + "→ Morts totales: " + player_info.getDeath(e.getPlayer().getUniqueId(), Games.Totem));
-				    	        cscore4.setScore(3);
+					    	        cscore1.setScore(8);
+					    	        Score cscore2 = cobjective.getScore("  ");
+					    	        cscore2.setScore(7);
+					    	        Score cscore3 = cobjective.getScore(ChatColor.YELLOW + "→ Joueurs: " + Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().size());
+					    	        cscore3.setScore(6);
+				    	        }   	        
+				    	        Score cscore4 = cobjective.getScore("   ");
+				    	        cscore4.setScore(5);
+				    	        Score cscore5 = cobjective.getScore(ChatColor.AQUA + "→ Kills totaux: " + player_info.getKill(e.getPlayer().getUniqueId(), Games.Totem));
+				    	        cscore5.setScore(4);
+				    	        Score cscore6 = cobjective.getScore(ChatColor.AQUA + "→ Morts totales: " + player_info.getDeath(e.getPlayer().getUniqueId(), Games.Totem));
+				    	        cscore6.setScore(3);
 				    	        double ratio = (double) player_info.getKill(e.getPlayer().getUniqueId(), Games.Totem) / (double) player_info.getDeath(e.getPlayer().getUniqueId(), Games.Totem);
-				    	        Score cscore5 = cobjective.getScore(ChatColor.AQUA + "→ Ratio: " + ratio + " K/M");
-				    	        cscore5.setScore(2);
-				    	        Score cscore6 = cobjective.getScore("   ");
-				    	        cscore6.setScore(1);
-				    	        Score cscore7 = cobjective.getScore(ChatColor.BLUE + "" + "     " + ChatColor.UNDERLINE + "ultima.net");
-				    	        cscore7.setScore(0);
+				    	        Score cscore7 = cobjective.getScore(ChatColor.AQUA + "→ Ratio: " + ratio + " K/M");
+				    	        cscore7.setScore(2);
+				    	        Score cscore8 = cobjective.getScore("    ");
+				    	        cscore8.setScore(1);
+				    	        Score cscore9 = cobjective.getScore(ChatColor.BLUE + "" + "     " + ChatColor.UNDERLINE + "ultima.net");
+				    	        cscore9.setScore(0);
 				    	        e.getPlayer().setScoreboard(totemW);
 		    				}
 		    			}
