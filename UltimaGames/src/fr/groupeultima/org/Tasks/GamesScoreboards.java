@@ -124,27 +124,7 @@ public class GamesScoreboards implements Listener {
 		    		@Override
 		            public void run() {
 		    			if(e.getPlayer().getWorld() == Bukkit.getServer().getWorld(UltimaGames.totemMap)) {
-		    				if(UltimaGames.getConfig().getInt("Games.Totem.isGameFinished") == 1) {
-		    					ScoreboardManager cmanager = Bukkit.getScoreboardManager();
-				    	        final Scoreboard totemF = cmanager.getNewScoreboard();
-				    	        final Objective cobjective = totemF.registerNewObjective("totemF", "totemF", "totemF");
-				    	        cobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-				    	        cobjective.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem");
-				    	        Score cscore = cobjective.getScore(" ");
-				    	        cscore.setScore(5);
-				    	        Score cscore1 = cobjective.getScore(ChatColor.AQUA + "Partie terminée!");
-				    	        cscore1.setScore(4);
-				    	        Score cscore2 = cobjective.getScore("  ");
-				    	        cscore2.setScore(3);
-				    	        Score cscore3 = cobjective.getScore(ChatColor.AQUA + "→ Crédits: " + player_info.getCredit(e.getPlayer().getUniqueId()) + " CR");
-				    	        cscore3.setScore(2);
-				    	        Score cscore4 = cobjective.getScore("   ");
-				    	        cscore4.setScore(1);
-				    	        Score cscore5 = cobjective.getScore(ChatColor.BLUE + "" + "     " + ChatColor.UNDERLINE + "ultima.net");
-				    	        cscore5.setScore(0);
-				    	        e.getPlayer().setScoreboard(totemF);
-		    				}
-		    				else if(UltimaGames.getConfig().contains("Games.Totem.Teams.Red." + e.getPlayer().getName())) { // player is ig, in red team
+		    				if(UltimaGames.getConfig().contains("Games.Totem.Teams.Red." + e.getPlayer().getName())) { // player is ig, in red team
 				    			ScoreboardManager cmanager = Bukkit.getScoreboardManager();
 				    	        final Scoreboard totemR = cmanager.getNewScoreboard();
 				    	        final Objective cobjective = totemR.registerNewObjective("totemR", "totemR", "totemR");
