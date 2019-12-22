@@ -140,12 +140,7 @@ public class Totem implements Listener {
 					Identity player_info = new Identity();
 					if(e.getCause() != DamageCause.VOID) {
 						for (Player D1p : Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers()) {
-							D1p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[RushFFA " + ChatColor.RESET
-									+ "" + ChatColor.GOLD + "" + ChatColor.ITALIC + "Deluxe" + ChatColor.RESET + ""
-									+ ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "] " + ChatColor.RESET + ""
-									+ ChatColor.AQUA + "" + ChatColor.BOLD + "" + e.getEntity().getName()
-									+ ChatColor.RESET + "" + ChatColor.AQUA + " a été tué par " + ChatColor.BOLD + ""
-									+ d.getName() + ChatColor.RESET + "" + ChatColor.AQUA + ".");
+							D1p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "" + ChatColor.BOLD + "" + e.getEntity().getName() + ChatColor.RESET + "" + ChatColor.YELLOW + " a été tué par " + ChatColor.BOLD + "" + d.getName() + ChatColor.RESET + "" + ChatColor.YELLOW + ".");
 						}
 						player_info.addKill(1, d.getUniqueId(), Games.Totem);
 						if(UltimaGames.getConfig().contains("Games.Totem.Teams.Red." + d.getName())) {
@@ -187,16 +182,12 @@ public class Totem implements Listener {
 							UltimaGames.saveConfig();
 							UltimaGames.reloadConfig();
 						}
+						player_info.addCredit(10, d.getUniqueId());
 						d.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
 								"§cVous avez tué §l" + e.getEntity().getName() + "§r§c. §6+10 Crédits."));
 					} else {
 						for (Player D2p : Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers()) {
-							D2p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[RushFFA " + ChatColor.RESET
-									+ "" + ChatColor.GOLD + "" + ChatColor.ITALIC + "Deluxe" + ChatColor.RESET + ""
-									+ ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "] " + ChatColor.RESET + ""
-									+ ChatColor.AQUA + "" + ChatColor.BOLD + "" + e.getEntity().getName()
-									+ ChatColor.RESET + "" + ChatColor.AQUA + " a été tué par le " + ChatColor.BOLD
-									+ "vide" + ChatColor.RESET + "" + ChatColor.AQUA + ".");
+							D2p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "" + ChatColor.BOLD + "" + e.getEntity().getName() + ChatColor.RESET + "" + ChatColor.YELLOW + " a été tué par " + ChatColor.BOLD + "le vide" + ChatColor.RESET + "" + ChatColor.YELLOW + ".");
 						}
 					}
 					p.setHealth(20);
