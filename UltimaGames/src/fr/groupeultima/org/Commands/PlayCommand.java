@@ -52,6 +52,8 @@ public class PlayCommand implements CommandExecutor {
 		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
 		p.teleport(spawnLoc);
 		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.RED + "Vous êtes rouge!");
+		p.getInventory().setHeldItemSlot(0);
+		p.playSound(p.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 1);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -73,6 +75,8 @@ public class PlayCommand implements CommandExecutor {
 		spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
 		p.teleport(spawnLoc);
 		p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.BLUE + "Vous êtes bleu!");
+		p.getInventory().setHeldItemSlot(0);
+		p.playSound(p.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 1);
 
 	}
 	
@@ -88,6 +92,8 @@ public class PlayCommand implements CommandExecutor {
 		if(waitingPlayers >= UltimaGames.getConfig().getInt("Games.Totem.minimumPlayersToStart") && UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
 			UltimaGames.getConfig().set("Games.Totem.isGameStarting", 1); //tell to players game is starting
 			p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.GREEN + "Lancement en cours");
+			p.getInventory().setHeldItemSlot(0);
+			p.playSound(p.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 1);
 			
 			new BukkitRunnable() {
 				int i = 1;
@@ -149,27 +155,15 @@ public class PlayCommand implements CommandExecutor {
 										joinAsRed(Player);
 										player_list.remove(Player);
 										i2++;
-										if(player_list.size() == 1) {
-											i2 = 2;
-										}
+										
 									}
 									else if(i2 == 1) { //blue team
 										joinAsBlue(Player);
 										player_list.remove(Player);
 										i2 = i2 - 1;
-										if(player_list.size() == 1) {
-											i2 = 2;
-										}
+										
 									}
-									else if(i2 == 2) { //random team (number of players is odd)
-										int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
-										if(redorblue == 0) {
-											joinAsRed(Player);
-										}
-										else {
-											joinAsBlue(Player);
-										}
-									}
+									
 									else {
 										return;
 									}
@@ -186,6 +180,7 @@ public class PlayCommand implements CommandExecutor {
 		}
 		else {
 			p.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + "Totem", ChatColor.YELLOW + "En attente de joueurs...");
+			p.getInventory().setHeldItemSlot(0);
 		}
 	}
 	
