@@ -94,6 +94,8 @@ public class UltimaGames extends JavaPlugin {
 		reloadConfig();
 	}
 	
+	//config.yml
+	
 	@Override
 	public void onDisable() {
 		

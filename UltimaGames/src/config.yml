@@ -9,6 +9,7 @@ Games:
     totemHeight: 4 #In blocks
     minimumPlayersToStart: 2
     isGameStarting: 0 #Dont touch
+    isGameFinished: 0 #Dont touch
     redTotemBlocksBroken: 0 #Dont touch
     blueTotemBlocksBroken: 0 #Dont touch
     redPlayers: 0 #Dont touch

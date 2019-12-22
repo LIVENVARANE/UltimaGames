@@ -1,5 +1,7 @@
 package fr.groupeultima.org.Commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,8 +31,10 @@ public class PlayCommand implements CommandExecutor {
 		UltimaGames = instance;
 	}
 	
+	public int i2 = 0;
+	
 	@SuppressWarnings("deprecation")
-	private void joinAsRed(Player p) {
+	public void joinAsRed(Player p) {
 		FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams.Red"), p.getName());
 		UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName() + ".obsidian", 0);
 		UltimaGames.getConfig().set("Games.Totem.Teams.Red." + p.getName() + ".kills", 0);
@@ -51,7 +55,7 @@ public class PlayCommand implements CommandExecutor {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void joinAsBlue(Player p) {
+	public void joinAsBlue(Player p) {
 		FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams.Blue"), p.getName());
 		UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName() + ".obsidian", 0);
 		UltimaGames.getConfig().set("Games.Totem.Teams.Blue." + p.getName() + ".kills", 0);
@@ -73,7 +77,7 @@ public class PlayCommand implements CommandExecutor {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void joinAsWaiting(Player p) {
+	public void joinAsWaiting(Player p) {
 		Location spawnLoc =  new Location(Bukkit.getServer().getWorld(UltimaGames.totemMap),0,0,0);
 		String preSpawnLoc[] = UltimaGames.getConfig().getString("Games.Totem.waitSpawnLoc").split(",");
 		spawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
@@ -137,6 +141,42 @@ public class PlayCommand implements CommandExecutor {
 						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.GREEN + "Lancement de la partie!"));
 						
 						//equally dispatch players in each teams
+						ArrayList<Player> player_list = new ArrayList<Player>();
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> player_list.add(Player));
+						Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(
+								Player -> {
+									if(i2 == 0) { //red team
+										joinAsRed(Player);
+										player_list.remove(Player);
+										i2++;
+										if(player_list.size() == 1) {
+											i2 = 2;
+										}
+									}
+									else if(i2 == 1) { //blue team
+										joinAsBlue(Player);
+										player_list.remove(Player);
+										i2 = i2 - 1;
+										if(player_list.size() == 1) {
+											i2 = 2;
+										}
+									}
+									else if(i2 == 2) { //random team (number of players is odd)
+										int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
+										if(redorblue == 0) {
+											joinAsRed(Player);
+										}
+										else {
+											joinAsBlue(Player);
+										}
+									}
+									else {
+										return;
+									}
+								}
+								);
+	
+						
 						
 						UltimaGames.getConfig().set("Games.Totem.isGameStarting", 0);
 						return;
@@ -163,35 +203,39 @@ public class PlayCommand implements CommandExecutor {
 							sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de RushFFA vous voulez jouer: /play rushffa [original/deluxe]");
 						}
 						else if(args[0].equalsIgnoreCase("totem")) {
-							int blue_players = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
-							int red_players = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
-							
-							if(red_players == 0 && blue_players == 0) {
-								//waiting time
-								joinAsWaiting(p);
+							if(UltimaGames.getConfig().getInt("Games.Totem.isGameFinished") == 1) { //game just finished
+								p.sendMessage(ChatColor.RED + "Une partie de Totem vient de se finir, veuillez attendre quelques secondes avant de rejoindre.");
 							}
-							else { //game is started
-							
-								if(red_players > blue_players) {
-									joinAsBlue(p);
+							else {
+								int blue_players = UltimaGames.getConfig().getInt("Games.Totem.bluePlayers");
+								int red_players = UltimaGames.getConfig().getInt("Games.Totem.redPlayers");
+								
+								if(red_players == 0 && blue_players == 0) {
+									//waiting time
+									joinAsWaiting(p);
 								}
-								else if(red_players < blue_players) {
-									joinAsRed(p);
-								}
-								else if(red_players == blue_players) {
-									int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
-									if(redorblue == 0) {
-										joinAsRed(p);
-									}
-									else {
+								else { //game is started
+								
+									if(red_players > blue_players) {
 										joinAsBlue(p);
 									}
-								}
-								else {
-									p.sendMessage(ChatColor.RED + "Une erreur est survenue, veuillez ré-essayer.");
+									else if(red_players < blue_players) {
+										joinAsRed(p);
+									}
+									else if(red_players == blue_players) {
+										int redorblue = ThreadLocalRandom.current().nextInt(0, 2);
+										if(redorblue == 0) {
+											joinAsRed(p);
+										}
+										else {
+											joinAsBlue(p);
+										}
+									}
+									else {
+										p.sendMessage(ChatColor.RED + "Une erreur est survenue, veuillez ré-essayer.");
+									}
 								}
 							}
-							
 						}
 						else {
 							sender.sendMessage(ChatColor.YELLOW + "Veuillez spécifier quel à quel mode de jeu vous voulez jouer: /play [rushffa/ffa/sumo/totem]");

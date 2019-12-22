@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +16,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.groupeultima.org.UltimaGames;
 import net.md_5.bungee.api.ChatMessageType;
@@ -102,6 +105,15 @@ public class Totem implements Listener {
 	}
 	
 	@EventHandler
+	public void onWeatherChange(WeatherChangeEvent e) {
+		if (e.getWorld() == Bukkit.getServer().getWorld(UltimaGames.totemMap)
+				|| e.getWorld() == Bukkit.getServer().getWorld(UltimaGames.totemMap)) {
+			e.setCancelled(true);
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler
 	public void onObsidianBreak(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if(e.getBlock().getWorld() == Bukkit.getServer().getWorld(UltimaGames.totemMap)) {
@@ -185,10 +197,6 @@ public class Totem implements Listener {
 						if(UltimaGames.getConfig().getInt("Games.Totem.totemHeight") == blocks_broken) {
 							//red won
 							
-							TotemBlocks.forEach(blocks -> blocks.setType(Material.AIR));
-							
-							p.sendMessage("you won");
-							
 							UltimaGames.getConfig().set("Games.Totem.Teams", null);
 							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem"), "Teams");
 							FileConfiguration.createPath(UltimaGames.getConfig().getConfigurationSection("Games.Totem.Teams"), "Red");
@@ -207,8 +215,63 @@ public class Totem implements Listener {
 							UltimaGames.getConfig().set("Games.Totem.blueTotemBlocksBroken", 0);
 							UltimaGames.getConfig().set("Games.Totem.redPlayers", 0);
 							UltimaGames.getConfig().set("Games.Totem.bluePlayers", 0);
+							
+							UltimaGames.getConfig().set("Games.Totem.isGameFinished", 1);
+							
 							UltimaGames.saveConfig();
 							UltimaGames.reloadConfig();
+							
+							
+							Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> {
+								Player.setGameMode(GameMode.SPECTATOR);
+								Player.sendTitle(ChatColor.RED + "" + ChatColor.BOLD + "Les Rouges", ChatColor.GOLD + "ont gagnés!");
+								Player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.DARK_GREEN + "Fin de la partie, les rouge gagnent!");
+								
+								new BukkitRunnable() {
+									int i = 1;
+									@Override
+									public void run() {
+										if(i == 1) {
+											i++;
+											return;
+										}
+										if(i == 2) {
+											i++;
+											return;
+										}
+										if(i == 3) {
+											i++;
+											return;
+										}
+										if(i == 4) {
+											i++;
+											return;
+										}
+										if(i == 5) {
+											i++;
+											if(UltimaGames.getConfig().getInt("Games.Totem.isGameStarting") != 1) {
+												return;
+											}
+											Bukkit.getServer().getWorld(UltimaGames.totemMap).getPlayers().forEach(Player -> Player.sendMessage(" \n" + ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + "" + ChatColor.YELLOW + "Retour au hub...\n "));
+											
+											//give money to each team players
+											
+											return;
+										}
+										if(i == 6) {
+											i++;
+											Player.performCommand("hub");
+											TotemBlocks.forEach(blocks -> blocks.setType(Material.AIR));
+											UltimaGames.getConfig().set("Games.Totem.isGameFinished", 0);
+											UltimaGames.saveConfig();
+											UltimaGames.reloadConfig();
+											return;
+										}
+									}
+								}.runTaskTimer(UltimaGames, 0, 20);
+							});
+							
+							
 							
 						}
 					}
