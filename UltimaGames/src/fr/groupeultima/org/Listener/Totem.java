@@ -112,6 +112,8 @@ public class Totem implements Listener {
 	}
 
 	public static ArrayList<Block> TotemBlocks = new ArrayList<Block>();
+	
+	public static ArrayList<Block> TotemTotemObsidianBlocks = new ArrayList<Block>();
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
@@ -289,6 +291,7 @@ public class Totem implements Listener {
 						&& e.getBlock().getLocation().getZ() == redObsiLoc.getZ()) {
 					if(UltimaGames.getConfig().contains("Games.Totem.Teams.Blue." + p.getName())) {
 						e.setDropItems(false);
+						TotemTotemObsidianBlocks.add(e.getBlock());
 						p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[Totem] " + ChatColor.RESET + ""
 								+ ChatColor.YELLOW + "Vous avez cassé un bloc d'obsibienne du totem ennemi, bien jou�!"
 								+ ChatColor.GOLD
@@ -385,6 +388,7 @@ public class Totem implements Listener {
 											i++;
 											Player.performCommand("hub");
 											TotemBlocks.forEach(blocks -> blocks.setType(Material.AIR));
+											TotemTotemObsidianBlocks.forEach(blocks -> blocks.setType(Material.OBSIDIAN));
 											UltimaGames.getConfig().set("Games.Totem.isGameFinished", 0);
 											UltimaGames.saveConfig();
 											UltimaGames.reloadConfig();
@@ -501,6 +505,7 @@ public class Totem implements Listener {
 											i++;
 											Player.performCommand("hub");
 											TotemBlocks.forEach(blocks -> blocks.setType(Material.AIR));
+											TotemTotemObsidianBlocks.forEach(blocks -> blocks.setType(Material.OBSIDIAN));
 											UltimaGames.getConfig().set("Games.Totem.isGameFinished", 0);
 											UltimaGames.saveConfig();
 											UltimaGames.reloadConfig();
