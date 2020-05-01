@@ -42,8 +42,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import fr.groupeultima.Library.IdentityCard.Identity;
-import fr.groupeultima.Library.IdentityCard.Enum.Games;
+import fr.groupeultima.library.identitycard.Identity;
+import fr.groupeultima.library.identitycard.Enum.Games;
 import fr.groupeultima.org.UltimaGames;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.md_5.bungee.api.ChatMessageType;
@@ -111,10 +111,186 @@ public class RushFFA implements Listener {
 	@EventHandler
 	public void voidkill(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
+		Identity player_info = new Identity();
 		if (p.getWorld() == Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap)) {
 			if (p.getLocation().getY() < 0) {
 				if (p.getGameMode() != GameMode.SPECTATOR) {
-					p.sendMessage("y < 0 original"); // DO SAME THING FOR ORIGINAL
+					String spawnLocNumber = UltimaGames.getConfig().getString("Games.RushFFA.Original.specLoc");
+					String preSpawnLoc[] = spawnLocNumber.split(",");
+					Location specSpawnLoc = new Location(Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap), 0, 0, 0);
+					specSpawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
+					specSpawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
+					specSpawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
+					player_info.addDeath(1, p.getUniqueId(), Games.RushOriginal);
+					p.teleport(specSpawnLoc);
+					p.setHealth(20);
+					p.getInventory().clear();
+					p.setGameMode(GameMode.SPECTATOR);
+					
+					for (Player D2p : Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap).getPlayers()) {
+						D2p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "[RushFFA " + ChatColor.RESET
+								+ "" + ChatColor.WHITE + "" + "Original" + ChatColor.RESET + ""
+								+ ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "] " + ChatColor.RESET + ""
+								+ ChatColor.AQUA + "" + ChatColor.BOLD + "" + p.getName()
+								+ ChatColor.RESET + "" + ChatColor.AQUA + " a été tué par le " + ChatColor.BOLD
+								+ "vide" + ChatColor.RESET + "" + ChatColor.AQUA + ".");
+					}
+					p.sendTitle(ChatColor.RED + "Vous êtes mort!",
+							ChatColor.GOLD + "Réapparition dans 3 secondes...");
+					final BossBar respawnBBar = Bukkit.createBossBar("§6Réapparition dans §l3 secondes§r§6.",
+							BarColor.RED, BarStyle.SOLID);
+					respawnBBar.addPlayer(p);
+					p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 5, 1);
+					new BukkitRunnable() {
+						int i = 0;
+
+						@Override
+						public void run() {
+
+							if (i == 0) { // 1s
+								if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap)) {
+									respawnBBar.removePlayer(p);
+									return;
+								}
+								else {
+									respawnBBar.setProgress(0.6);
+									respawnBBar.setTitle("§6Réapparition dans §l2 secondes§r§6.");
+									p.sendTitle(ChatColor.RED + "Vous êtes mort!",
+											ChatColor.GOLD + "Réapparition dans 2 secondes...");
+									i++;
+									return;
+								}
+							}
+
+							if (i == 1) { // 2s
+								if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap)) {
+									respawnBBar.removePlayer(p);
+									return;
+								}
+								else {
+									respawnBBar.setProgress(0.3);
+									respawnBBar.setTitle("§6Réapparition dans §e§l1 seconde§r§6.");
+									p.sendTitle(ChatColor.RED + "Vous êtes mort!",
+											ChatColor.YELLOW + "Réapparition dans 1 seconde...");
+									respawnBBar.setColor(BarColor.YELLOW);
+									i++;
+									return;
+								}
+							}
+
+							if (i == 2) { // 3s
+								if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap)) {
+									respawnBBar.removePlayer(p);
+									return;
+								}
+								else {
+									int spawnNumber = ThreadLocalRandom.current().nextInt(1, 38);
+									String spawnLocNumber = UltimaGames.getConfig()
+											.getString("Games.RushFFA.Original.spawnLoc" + spawnNumber);
+									String preSpawnLoc[] = spawnLocNumber.split(",");
+									Location spawnLoc = new Location(
+											Bukkit.getServer().getWorld(UltimaGames.rushffaOriginalMap), 0, 0, 0);
+									spawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
+									spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
+									spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
+									int jokeNumber = ThreadLocalRandom.current().nextInt(1, 11);
+	
+									p.teleport(spawnLoc);
+									p.setGameMode(GameMode.SURVIVAL);
+									ItemStack helm = new ItemStack(Material.LEATHER_HELMET);
+									ItemMeta helmM = helm.getItemMeta();
+									helmM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+									helmM.setDisplayName(ChatColor.DARK_AQUA + "Casque");
+									helmM.setUnbreakable(true);
+									helm.setItemMeta(helmM);
+	
+									ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
+									ItemMeta chestM = chest.getItemMeta();
+									chestM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, true);
+									chestM.setDisplayName(ChatColor.DARK_AQUA + "Plastron");
+									chestM.setUnbreakable(true);
+									chest.setItemMeta(chestM);
+	
+									ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS);
+									ItemMeta pantsM = pants.getItemMeta();
+									pantsM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+									pantsM.setDisplayName(ChatColor.DARK_AQUA + "Jambières");
+									pantsM.setUnbreakable(true);
+									pants.setItemMeta(pantsM);
+	
+									ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+									ItemMeta bootsM = boots.getItemMeta();
+									bootsM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+									bootsM.setDisplayName(ChatColor.DARK_AQUA + "Chaussures");
+									bootsM.setUnbreakable(true);
+									boots.setItemMeta(bootsM);
+	
+									ItemStack sword = new ItemStack(Material.IRON_SWORD);
+									ItemMeta swordM = sword.getItemMeta();
+									swordM.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
+									swordM.addEnchant(Enchantment.KNOCKBACK, 1, true);
+									swordM.setDisplayName(ChatColor.DARK_AQUA + "Épée");
+									swordM.setUnbreakable(true);
+									sword.setItemMeta(swordM);
+	
+									ItemStack pick = new ItemStack(Material.IRON_PICKAXE);
+									ItemMeta pickM = pick.getItemMeta();
+									pickM.addEnchant(Enchantment.DIG_SPEED, 3, true);
+									pickM.setDisplayName(ChatColor.DARK_AQUA + "Pioche");
+									pickM.setUnbreakable(true);
+									pick.setItemMeta(pickM);
+	
+									ItemStack tnt = new ItemStack(Material.TNT, 64);
+									ItemMeta tntM = tnt.getItemMeta();
+									tntM.setDisplayName(ChatColor.RED + "TNT");
+									tnt.setItemMeta(tntM);
+	
+									ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 64);
+									ItemMeta gappleM = gapple.getItemMeta();
+									gappleM.setDisplayName(ChatColor.YELLOW + "Gapple");
+									gapple.setItemMeta(gappleM);
+	
+									ItemStack fire = new ItemStack(Material.FLINT_AND_STEEL);
+									ItemMeta fireM = fire.getItemMeta();
+									fireM.setDisplayName(ChatColor.DARK_AQUA + "Briquet");
+									fireM.setUnbreakable(true);
+									fire.setItemMeta(fireM);
+	
+									ItemStack sandstone = new ItemStack(Material.CUT_SANDSTONE, 64);
+									ItemMeta sandstoneM = sandstone.getItemMeta();
+									sandstoneM.setDisplayName(ChatColor.DARK_AQUA + "Sandstone");
+									sandstone.setItemMeta(sandstoneM);
+	
+									p.addPotionEffect(
+											new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 80, 1000));
+	
+									p.getInventory().setItemInOffHand(new ItemStack(sandstone));
+									p.getInventory().setItem(0, sword);
+									p.getInventory().setItem(1, pick);
+									p.getInventory().setItem(2, gapple);
+									p.getInventory().setItem(3, tnt);
+									p.getInventory().setItem(4, fire);
+									for (int i = 5; i < 8; i++) {
+										p.getInventory().setItem(i, sandstone);
+									}
+									p.getInventory().setHelmet(helm);
+									p.getInventory().setChestplate(chest);
+									p.getInventory().setLeggings(pants);
+									p.getInventory().setBoots(boots);
+									p.getInventory().setHeldItemSlot(0);
+									p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,
+											10, 1);
+									String selectedJoke = UltimaGames.getConfig()
+											.getString("Games.RushFFA.Original.joke" + jokeNumber);
+									p.sendTitle(ChatColor.AQUA + "RushFFA" + ChatColor.WHITE + ""
+											+ " Original", ChatColor.DARK_AQUA + selectedJoke);
+									respawnBBar.removePlayer((Player) p);
+									this.cancel();
+									return;
+								}
+							}
+						}
+					}.runTaskTimer(UltimaGames, 1 * 20, 1 * 20);
 				}
 			}
 		}
@@ -127,11 +303,12 @@ public class RushFFA implements Listener {
 					specSpawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
 					specSpawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
 					specSpawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
-
+					player_info.addDeath(1, p.getUniqueId(), Games.RushffaDeluxe);
 					p.teleport(specSpawnLoc);
 					p.setHealth(20);
 					p.getInventory().clear();
 					p.setGameMode(GameMode.SPECTATOR);
+					
 					for (Player D2p : Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap).getPlayers()) {
 						D2p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[RushFFA " + ChatColor.RESET
 								+ "" + ChatColor.GOLD + "" + ChatColor.ITALIC + "Deluxe" + ChatColor.RESET + ""
@@ -153,128 +330,146 @@ public class RushFFA implements Listener {
 						public void run() {
 
 							if (i == 0) { // 1s
-								respawnBBar.setProgress(0.6);
-								respawnBBar.setTitle("§6Réapparition dans §l2 secondes§r§6.");
-								p.sendTitle(ChatColor.RED + "Vous êtes mort!",
-										ChatColor.GOLD + "Réapparition dans 2 secondes...");
-								i++;
-								return;
+								if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap)) {
+									respawnBBar.removePlayer(p);
+									return;
+								}
+								else {
+									respawnBBar.setProgress(0.6);
+									respawnBBar.setTitle("§6Réapparition dans §l2 secondes§r§6.");
+									p.sendTitle(ChatColor.RED + "Vous êtes mort!",
+											ChatColor.GOLD + "Réapparition dans 2 secondes...");
+									i++;
+									return;
+								}
 							}
 
 							if (i == 1) { // 2s
-								respawnBBar.setProgress(0.3);
-								respawnBBar.setTitle("§6Réapparition dans §e§l1 seconde§r§6.");
-								p.sendTitle(ChatColor.RED + "Vous êtes mort!",
-										ChatColor.YELLOW + "Réapparition dans 1 seconde...");
-								respawnBBar.setColor(BarColor.YELLOW);
-								i++;
-								return;
+								if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap)) {
+									respawnBBar.removePlayer(p);
+									return;
+								}
+								else {
+									respawnBBar.setProgress(0.3);
+									respawnBBar.setTitle("§6Réapparition dans §e§l1 seconde§r§6.");
+									p.sendTitle(ChatColor.RED + "Vous êtes mort!",
+											ChatColor.YELLOW + "Réapparition dans 1 seconde...");
+									respawnBBar.setColor(BarColor.YELLOW);
+									i++;
+									return;
+								}
 							}
 
 							if (i == 2) { // 3s
-								int spawnNumber = ThreadLocalRandom.current().nextInt(1, 38);
-								String spawnLocNumber = UltimaGames.getConfig()
-										.getString("Games.RushFFA.Deluxe.spawnLoc" + spawnNumber);
-								String preSpawnLoc[] = spawnLocNumber.split(",");
-								Location spawnLoc = new Location(
-										Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap), 0, 0, 0);
-								spawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
-								spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
-								spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
-								int jokeNumber = ThreadLocalRandom.current().nextInt(1, 11);
-
-								p.teleport(spawnLoc);
-								p.setGameMode(GameMode.SURVIVAL);
-								ItemStack helm = new ItemStack(Material.LEATHER_HELMET);
-								ItemMeta helmM = helm.getItemMeta();
-								helmM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
-								helmM.setDisplayName(ChatColor.DARK_AQUA + "Casque");
-								helmM.setUnbreakable(true);
-								helm.setItemMeta(helmM);
-
-								ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
-								ItemMeta chestM = chest.getItemMeta();
-								chestM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, true);
-								chestM.setDisplayName(ChatColor.DARK_AQUA + "Plastron");
-								chestM.setUnbreakable(true);
-								chest.setItemMeta(chestM);
-
-								ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS);
-								ItemMeta pantsM = pants.getItemMeta();
-								pantsM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
-								pantsM.setDisplayName(ChatColor.DARK_AQUA + "Jambières");
-								pantsM.setUnbreakable(true);
-								pants.setItemMeta(pantsM);
-
-								ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
-								ItemMeta bootsM = boots.getItemMeta();
-								bootsM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
-								bootsM.setDisplayName(ChatColor.DARK_AQUA + "Chaussures");
-								bootsM.setUnbreakable(true);
-								boots.setItemMeta(bootsM);
-
-								ItemStack sword = new ItemStack(Material.IRON_SWORD);
-								ItemMeta swordM = sword.getItemMeta();
-								swordM.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
-								swordM.addEnchant(Enchantment.KNOCKBACK, 1, true);
-								swordM.setDisplayName(ChatColor.DARK_AQUA + "Épée");
-								swordM.setUnbreakable(true);
-								sword.setItemMeta(swordM);
-
-								ItemStack pick = new ItemStack(Material.IRON_PICKAXE);
-								ItemMeta pickM = pick.getItemMeta();
-								pickM.addEnchant(Enchantment.DIG_SPEED, 3, true);
-								pickM.setDisplayName(ChatColor.DARK_AQUA + "Pioche");
-								pickM.setUnbreakable(true);
-								pick.setItemMeta(pickM);
-
-								ItemStack tnt = new ItemStack(Material.TNT, 64);
-								ItemMeta tntM = tnt.getItemMeta();
-								tntM.setDisplayName(ChatColor.RED + "TNT");
-								tnt.setItemMeta(tntM);
-
-								ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 64);
-								ItemMeta gappleM = gapple.getItemMeta();
-								gappleM.setDisplayName(ChatColor.YELLOW + "Gapple");
-								gapple.setItemMeta(gappleM);
-
-								ItemStack fire = new ItemStack(Material.FLINT_AND_STEEL);
-								ItemMeta fireM = fire.getItemMeta();
-								fireM.setDisplayName(ChatColor.DARK_AQUA + "Briquet");
-								fireM.setUnbreakable(true);
-								fire.setItemMeta(fireM);
-
-								ItemStack sandstone = new ItemStack(Material.CUT_SANDSTONE, 64);
-								ItemMeta sandstoneM = sandstone.getItemMeta();
-								sandstoneM.setDisplayName(ChatColor.DARK_AQUA + "Sandstone");
-								sandstone.setItemMeta(sandstoneM);
-
-								p.addPotionEffect(
-										new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 80, 1000));
-
-								p.getInventory().setItemInOffHand(new ItemStack(sandstone));
-								p.getInventory().setItem(0, sword);
-								p.getInventory().setItem(1, pick);
-								p.getInventory().setItem(2, gapple);
-								p.getInventory().setItem(3, tnt);
-								p.getInventory().setItem(4, fire);
-								for (int i = 5; i < 8; i++) {
-									p.getInventory().setItem(i, sandstone);
+								if(p.getWorld() != Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap)) {
+									respawnBBar.removePlayer(p);
+									return;
 								}
-								p.getInventory().setHelmet(helm);
-								p.getInventory().setChestplate(chest);
-								p.getInventory().setLeggings(pants);
-								p.getInventory().setBoots(boots);
-								p.getInventory().setHeldItemSlot(0);
-								p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,
-										10, 1);
-								String selectedJoke = UltimaGames.getConfig()
-										.getString("Games.RushFFA.Deluxe.joke" + jokeNumber);
-								p.sendTitle(ChatColor.AQUA + "RushFFA" + ChatColor.GOLD + ""
-										+ ChatColor.ITALIC + " Deluxe", ChatColor.DARK_AQUA + selectedJoke);
-								respawnBBar.removePlayer((Player) p);
-								this.cancel();
-								return;
+								else {
+									int spawnNumber = ThreadLocalRandom.current().nextInt(1, 38);
+									String spawnLocNumber = UltimaGames.getConfig()
+											.getString("Games.RushFFA.Deluxe.spawnLoc" + spawnNumber);
+									String preSpawnLoc[] = spawnLocNumber.split(",");
+									Location spawnLoc = new Location(
+											Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap), 0, 0, 0);
+									spawnLoc.setX(Double.parseDouble(preSpawnLoc[0]));
+									spawnLoc.setY(Double.parseDouble(preSpawnLoc[1]));
+									spawnLoc.setZ(Double.parseDouble(preSpawnLoc[2]));
+									int jokeNumber = ThreadLocalRandom.current().nextInt(1, 11);
+	
+									p.teleport(spawnLoc);
+									p.setGameMode(GameMode.SURVIVAL);
+									ItemStack helm = new ItemStack(Material.LEATHER_HELMET);
+									ItemMeta helmM = helm.getItemMeta();
+									helmM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+									helmM.setDisplayName(ChatColor.DARK_AQUA + "Casque");
+									helmM.setUnbreakable(true);
+									helm.setItemMeta(helmM);
+	
+									ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
+									ItemMeta chestM = chest.getItemMeta();
+									chestM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, true);
+									chestM.setDisplayName(ChatColor.DARK_AQUA + "Plastron");
+									chestM.setUnbreakable(true);
+									chest.setItemMeta(chestM);
+	
+									ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS);
+									ItemMeta pantsM = pants.getItemMeta();
+									pantsM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+									pantsM.setDisplayName(ChatColor.DARK_AQUA + "Jambières");
+									pantsM.setUnbreakable(true);
+									pants.setItemMeta(pantsM);
+	
+									ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+									ItemMeta bootsM = boots.getItemMeta();
+									bootsM.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
+									bootsM.setDisplayName(ChatColor.DARK_AQUA + "Chaussures");
+									bootsM.setUnbreakable(true);
+									boots.setItemMeta(bootsM);
+	
+									ItemStack sword = new ItemStack(Material.IRON_SWORD);
+									ItemMeta swordM = sword.getItemMeta();
+									swordM.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
+									swordM.addEnchant(Enchantment.KNOCKBACK, 1, true);
+									swordM.setDisplayName(ChatColor.DARK_AQUA + "Épée");
+									swordM.setUnbreakable(true);
+									sword.setItemMeta(swordM);
+	
+									ItemStack pick = new ItemStack(Material.IRON_PICKAXE);
+									ItemMeta pickM = pick.getItemMeta();
+									pickM.addEnchant(Enchantment.DIG_SPEED, 3, true);
+									pickM.setDisplayName(ChatColor.DARK_AQUA + "Pioche");
+									pickM.setUnbreakable(true);
+									pick.setItemMeta(pickM);
+	
+									ItemStack tnt = new ItemStack(Material.TNT, 64);
+									ItemMeta tntM = tnt.getItemMeta();
+									tntM.setDisplayName(ChatColor.RED + "TNT");
+									tnt.setItemMeta(tntM);
+	
+									ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 64);
+									ItemMeta gappleM = gapple.getItemMeta();
+									gappleM.setDisplayName(ChatColor.YELLOW + "Gapple");
+									gapple.setItemMeta(gappleM);
+	
+									ItemStack fire = new ItemStack(Material.FLINT_AND_STEEL);
+									ItemMeta fireM = fire.getItemMeta();
+									fireM.setDisplayName(ChatColor.DARK_AQUA + "Briquet");
+									fireM.setUnbreakable(true);
+									fire.setItemMeta(fireM);
+	
+									ItemStack sandstone = new ItemStack(Material.CUT_SANDSTONE, 64);
+									ItemMeta sandstoneM = sandstone.getItemMeta();
+									sandstoneM.setDisplayName(ChatColor.DARK_AQUA + "Sandstone");
+									sandstone.setItemMeta(sandstoneM);
+	
+									p.addPotionEffect(
+											new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 80, 1000));
+	
+									p.getInventory().setItemInOffHand(new ItemStack(sandstone));
+									p.getInventory().setItem(0, sword);
+									p.getInventory().setItem(1, pick);
+									p.getInventory().setItem(2, gapple);
+									p.getInventory().setItem(3, tnt);
+									p.getInventory().setItem(4, fire);
+									for (int i = 5; i < 8; i++) {
+										p.getInventory().setItem(i, sandstone);
+									}
+									p.getInventory().setHelmet(helm);
+									p.getInventory().setChestplate(chest);
+									p.getInventory().setLeggings(pants);
+									p.getInventory().setBoots(boots);
+									p.getInventory().setHeldItemSlot(0);
+									p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,
+											10, 1);
+									String selectedJoke = UltimaGames.getConfig()
+											.getString("Games.RushFFA.Deluxe.joke" + jokeNumber);
+									p.sendTitle(ChatColor.AQUA + "RushFFA" + ChatColor.GOLD + ""
+											+ ChatColor.ITALIC + " Deluxe", ChatColor.DARK_AQUA + selectedJoke);
+									respawnBBar.removePlayer((Player) p);
+									this.cancel();
+									return;
+								}
 							}
 						}
 					}.runTaskTimer(UltimaGames, 1 * 20, 1 * 20);
@@ -340,7 +535,7 @@ public class RushFFA implements Listener {
 							+ ChatColor.BOLD + "" + d.getName() + ChatColor.RESET + "" + ChatColor.AQUA + ".");
 				}
 				d.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent
-						.fromLegacyText("§cVous avez tué &l" + e.getEntity().getName() + "&r&c. &4+10 Crédits."));
+						.fromLegacyText("§cVous avez tué &l" + e.getEntity().getName() + "&r&c. &4+10 CRédits."));
 			} else if (e.getEntity().getWorld() == Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap)) {
 				if (p.getHealth() - e.getDamage() < 1) {
 					Identity player_info = new Identity();
@@ -355,7 +550,7 @@ public class RushFFA implements Listener {
 									+ d.getName() + ChatColor.RESET + "" + ChatColor.AQUA + ".");
 						}
 						d.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-								"§cVous avez tué §l" + e.getEntity().getName() + "§r§c. §6+10 Crédits."));
+								"§cVous avez tué §l" + e.getEntity().getName() + "§r§c. §6+10 CRédits."));
 					} else {
 						for (Player D2p : Bukkit.getServer().getWorld(UltimaGames.rushffaDeluxeMap).getPlayers()) {
 							D2p.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "[RushFFA " + ChatColor.RESET

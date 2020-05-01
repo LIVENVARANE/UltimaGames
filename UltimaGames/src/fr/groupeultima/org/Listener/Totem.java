@@ -25,8 +25,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import fr.groupeultima.Library.IdentityCard.Identity;
-import fr.groupeultima.Library.IdentityCard.Enum.Games;
+import fr.groupeultima.library.identitycard.Identity;
+import fr.groupeultima.library.identitycard.Enum.Games;
 import fr.groupeultima.org.UltimaGames;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;

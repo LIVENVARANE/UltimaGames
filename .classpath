@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="UltimaGames/src"/>
+	<classpathentry kind="lib" path="D:/LVN/Documents/Développement/Projets/Ultima/Server/plugins/UltimaLib/releases/UltimaLibrary-8-1.15.2.jar"/>
+	<classpathentry kind="lib" path="D:/LVN/Documents/Développement/Libraries Eclipse/minecraft/spigot-1.15.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

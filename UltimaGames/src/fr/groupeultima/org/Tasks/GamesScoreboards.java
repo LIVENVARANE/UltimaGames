@@ -2,7 +2,7 @@ package fr.groupeultima.org.Tasks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -13,8 +13,8 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import fr.groupeultima.Library.IdentityCard.Identity;
-import fr.groupeultima.Library.IdentityCard.Enum.Games;
+import fr.groupeultima.library.identitycard.Identity;
+import fr.groupeultima.library.identitycard.Enum.Games;
 import fr.groupeultima.org.UltimaGames;
 
 public class GamesScoreboards implements Listener {
